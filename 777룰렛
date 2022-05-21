@@ -1,0 +1,183 @@
+#include<stdio.h>
+#include<conio.h>
+#include<windows.h>
+#include<time.h>
+#include<stdlib.h>
+
+#define space 32
+
+void num3(int w);
+void num2(int o);
+void num1(int v);
+void num();
+void gotoxy(int x, int y);
+int x7[11][9][5] = {
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},//null
+	{1,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1},//0
+	{0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1},//1
+	{1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1},//2
+	{1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1},//3
+	{1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1},//4
+	{1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1},//5
+	{1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1},//6
+	{1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1},//7
+	{1,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1},//8
+	{1,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1},//9
+};
+int xx[100][100];
+int random, i, j, k, c, a = 6, b = 6, random1, random2;
+
+int main()
+{
+	CONSOLE_CURSOR_INFO cursorInfo = { 0, };//깜박거리는 커서 제거
+	cursorInfo.bVisible = 0;
+	cursorInfo.dwSize = 1;
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+	
+	for (k = 1; k <= 3; k++)
+	{
+		for (i = 0; i < 9; i++)
+		{
+			for (j = 0; j < 5; j++)
+			{
+				if (x7[1][i][j] == 1)
+				{
+					xx[j + k * 10 + a][i + b] = 1;
+					gotoxy(j + k * 10 + a, i + b);
+					printf("■");
+				}
+			}
+		}
+	}
+
+	while (1)
+	{
+		if (_kbhit())
+		{
+			c = _getch();
+			if (c == space)
+			{
+				num();
+			}
+		}
+	}
+	system("pause>null");
+}
+
+void gotoxy(int x, int y)
+{
+	COORD pos = { x * 2,y };
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+
+void num()
+{
+	srand(time(NULL));
+
+	while (1)
+	{
+		random = rand() % 9 + 1;
+		num1(10);
+		random1 = rand() % 9 + 1;
+		num2(20);
+		random2 = rand() % 9 + 1;
+		num3(30);
+		for (k = 0; k < 3; k++)
+		{
+			Sleep(10);
+			if (_kbhit())
+			{
+				c = _getch();
+				if (c == space)
+				{
+					goto A;
+				}
+			}
+		}
+		for (i = 0; i < 9; i++)
+		{
+			for (j = 0; j < 5; j++)
+			{
+				if (x7[0][i][j] == 0)
+				{
+					xx[j + a + 10][i + b] = 0;
+					gotoxy(j + a + 10, i + b);
+					printf("  ");
+				}
+			}
+		}
+		for (i = 0; i < 9; i++)
+		{
+			for (j = 0; j < 5; j++)
+			{
+				if (x7[0][i][j] == 0)
+				{
+					xx[j + a + 20][i + b] = 0;
+					gotoxy(j + a + 20, i + b);
+					printf("  ");
+				}
+			}
+		}
+		for (i = 0; i < 9; i++)
+		{
+			for (j = 0; j < 5; j++)
+			{
+				if (x7[0][i][j] == 0)
+				{
+					xx[j + a + 30][i + b] = 0;
+					gotoxy(j + a + 30, i + b);
+					printf("  ");
+				}
+			}
+		}
+	}
+A:;
+}
+
+void num1(int v)
+{
+	for (i = 0; i < 9; i++)
+	{
+		for (j = 0; j < 5; j++)
+		{
+			if (x7[random][i][j] == 1)
+			{
+				xx[j + v + a][i + b] = 1;
+				gotoxy(j + v + a, i + b);
+				printf("■");
+			}
+		}
+	}
+}
+
+void num2(int o)
+{
+	for (i = 0; i < 9; i++)
+	{
+		for (j = 0; j < 5; j++)
+		{
+			if (x7[random1][i][j] == 1)
+			{
+				xx[j + a + o][i + b] = 1;
+				gotoxy(j + a + o, i + b);
+				printf("■");
+			}
+		}
+	}
+}
+
+void num3(int w)
+{
+	for (i = 0; i < 9; i++)
+	{
+		for (j = 0; j < 5; j++)
+		{
+			if (x7[random2][i][j] == 1)
+			{
+				xx[j + a + w][i + b] = 1;
+				gotoxy(j + a + w, i + b);
+				printf("■");
+			}
+		}
+	}
+}
