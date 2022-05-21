@@ -1,0 +1,460 @@
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+#include<time.h>
+#include"cursor.h"
+
+#define up 72
+#define down 80
+#define left 75
+#define right 77
+
+void gotoxy(int x, int y);
+void draw_map();
+void star();
+void player();
+void playermove();
+void wndtjd();
+void wndtjdmove();
+
+int x[100][100], s, s1, ip, jp, iw, jw, sp, die;
+int main()
+{
+A:
+	system("cls");
+	s1 = 0, sp = 0, die = 0;
+	cursor();
+	draw_map();
+	star();
+	player();
+	playermove();
+	system("cls");
+	if (die == 2)
+	{
+		gotoxy(20, 10);
+		printf("■  ■  ■      ■      ■  ■■  ");
+		gotoxy(20, 11);
+		printf("■  ■  ■              ■■    ■");
+		gotoxy(20, 12);
+		printf("■  ■  ■      ■      ■      ■");
+		gotoxy(20, 13);
+		printf("  ■  ■        ■      ■      ■");
+		gotoxy(20, 14);
+		printf("  ■  ■        ■      ■      ■");
+		while (1)
+		{
+			if (_kbhit())
+			{
+				goto A;
+			}
+		}
+	}
+	else if (die == 1)
+	{
+		gotoxy(18, 10);
+		printf("■            ■■■      ■■■■    ■■■  ");
+		gotoxy(18, 11);
+		printf("■          ■      ■  ■          ■      ■");
+		gotoxy(18, 12);
+		printf("■          ■      ■    ■■■    ■■■■■");
+		gotoxy(18, 13);
+		printf("■          ■      ■          ■  ■        ");
+		gotoxy(18, 14);
+		printf("■■■■■    ■■■    ■■■■      ■■■■");
+		while (1)
+		{
+			if (_kbhit())
+			{
+				goto A;
+			}
+		}
+	}
+	system("pause>null");
+}
+
+void draw_map()
+{
+	srand(time(NULL));
+	int i, j, r;
+	for (i = 0; i < 15; i++)
+	{
+		for (j = 0; j < 30; j++)
+		{
+			if (i == 0)
+			{
+				x[0][j] = 1;
+				gotoxy(j, 0);
+				printf("■");
+			}
+			else if (i == 14)
+			{
+				x[14][j] = 1;
+				gotoxy(j, 14);
+				printf("■");
+			}
+			else if (j == 0)
+			{
+				x[i][0] = 1;
+				gotoxy(0, i);
+				printf("■");
+			}
+			else if (j == 29)
+			{
+				x[i][29] = 1;
+				gotoxy(29, i);
+				printf("■");
+			}
+			else
+			{
+				r = rand() % 8;
+				if (r == 1)
+				{
+					if (x[i + 1][j] == 2)
+					{
+						goto B;
+					}
+					x[i][j] = 1;
+					gotoxy(j, i);
+					printf("■");
+				}
+				else
+				{
+					x[i][j] = 0;
+					gotoxy(j, i);
+					printf("  ");
+				}
+			}
+		B:;
+		}
+	}
+	i = rand() % 13 + 1;
+	gotoxy(29, i);
+	x[i][29] = 2;
+	printf("  ");
+}
+
+void star()
+{
+	int i, j;
+	srand(time(NULL));
+	s = rand() % 15 + 1;
+	while (1)
+	{
+		A:
+		i = rand() % 13 + 1;
+		j = rand() % 28 + 1;
+		if (x[i][j] == 1)
+		{
+			goto A;
+		}
+		else
+		{
+			if (s1 != s)
+			{
+				gotoxy(j, i);
+				printf("☆");
+				x[i][j] = 3;
+				s1++;
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+}
+
+void wndtjd()
+{
+	int w, w1 = 0;
+	w = rand() % 10 + 1;
+	while (1)
+	{
+	A:
+		iw = rand() % 13 + 1;
+		jw = rand() % 25 + 4;
+		if (x[iw][jw] == 1 || x[iw][jw] == 3)
+		{
+			goto A;
+		}
+		else
+		{
+			if (w1 != w)
+			{
+				gotoxy(jw, iw);
+				printf("X");
+				x[iw][jw] = 4;
+				w1++;
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+}
+
+void player()
+{
+	while (1)
+	{
+	B:
+		wndtjd();
+		ip = rand() % 13 + 1;
+		jp = rand() % 3 + 1;
+		if (x[ip][jp] == 1 || x[ip][jp] == 3)
+		{
+			goto B;
+		}
+		else
+		{
+			gotoxy(jp, ip);
+			printf("●");
+			x[ip][jp] = 5;
+			break;
+		}
+	}
+}
+
+void playermove()
+{
+	int c;
+	while (1)
+	{
+	A:
+		wndtjdmove();
+		if (die == 1)
+		{
+			return;
+		}
+		Sleep(100);
+		if (_kbhit())
+		{
+			c = _getch();
+			if (c == 224)
+			{
+				c = _getch();
+				switch (c)
+				{
+				case left: if (x[ip][jp - 1] == 1)
+				{
+					goto A;
+				}
+						 else
+				{
+					if (x[ip][jp - 1] == 3)
+					{
+						sp++;
+					}
+					else if (x[ip][jp - 1] == 4)
+					{
+						die = 1;
+						return;
+					}
+					gotoxy(jp, ip);
+					printf("  ");
+					x[ip][jp] = 0;
+					jp--;
+					gotoxy(jp, ip);
+					printf("●");
+					x[ip][jp] = 5;
+				}
+						 break;
+				case right: if (x[ip][jp + 1] == 1)
+				{
+					goto A;
+				}
+						  else
+				{
+					if (x[ip][jp + 1] == 3)
+					{
+						sp++;
+					}
+					else if (x[ip][jp + 1] == 4)
+					{
+						die = 1;
+						return;
+					}
+					else if (x[ip][jp + 1] == 2 && sp == s)
+					{
+						die = 2;
+						return;
+					}
+					gotoxy(jp, ip);
+					printf("  ");
+					x[ip][jp] = 0;
+					jp++;
+					gotoxy(jp, ip);
+					printf("●");
+					x[ip][jp] = 5;
+				}
+						  break;
+				case up: if (x[ip - 1][jp] == 1)
+				{
+					goto A;
+				}
+					   else
+				{
+					if (x[ip - 1][jp] == 3)
+					{
+						sp++;
+					}
+					else if (x[ip - 1][jp] == 4)
+					{
+						die = 1;
+						return;
+					}
+					gotoxy(jp, ip);
+					printf("  ");
+					x[ip][jp] = 0;
+					ip--;
+					gotoxy(jp, ip);
+					printf("●");
+					x[ip][jp] = 5;
+				}
+					   break;
+				case down:; if (x[ip + 1][jp] == 1)
+				{
+					goto A;
+				}
+						 else
+				{
+					if (x[ip + 1][jp] == 3)
+					{
+						sp++;
+					}
+					else if (x[ip + 1][jp] == 4)
+					{
+						die = 1;
+						return;
+					}
+					gotoxy(jp, ip);
+					printf("  ");
+					x[ip][jp] = 0;
+					ip++;
+					gotoxy(jp, ip);
+					printf("●");
+					x[ip][jp] = 5;
+				}
+						 break;
+				}
+			}
+		}
+	}
+}
+
+void wndtjdmove()
+{
+	int cm, i, j;
+	srand(time(NULL));
+	for (i = 1; i < 14; i++)
+	{
+		for (j = 1; j < 29; j++)
+		{
+			if (x[i][j] == 4)
+			{
+				cm = rand() % 4;
+				switch (cm)
+				{
+				case 0: if (x[i][j - 1] == 1 || x[i][j - 1] == 2 || x[i][j - 1] == 3 || x[i][j - 1] == 4)
+				{
+					goto A;
+				}
+					  else
+				{
+					if (x[i][j- 1] == 5)
+					{
+						die = 1;
+						return;
+					}
+					else
+					{
+						gotoxy(j, i);
+						printf("  ");
+						x[i][j] = 0;
+						j--;
+						gotoxy(j, i);
+						printf("X");
+						x[i][j] = 4;
+					}
+				}
+					  j++;
+					  break;
+				case 1: if (x[i][j + 1] == 1 || x[i][j + 1] == 2 || x[i][j + 1] == 3 || x[i][j + 1] == 4)
+				{
+					goto A;
+				}
+					  else
+				{
+					if (x[i][j + 1] == 5)
+					{
+						die = 1;
+						return;
+					}
+					else
+					{
+						gotoxy(j, i);
+						printf("  ");
+						x[i][j] = 0;
+						j++;
+						gotoxy(j, i);
+						printf("X");
+						x[i][j] = 4;
+					}
+				}
+					  j--;
+					  break;
+				case 2: if (x[i - 1][j] == 1 || x[i - 1][j] == 2 || x[i - 1][j] == 3 || x[i - 1][j] == 4)
+				{
+					goto A;
+				}
+					  else
+				{
+					if (x[i - 1][j] == 5)
+					{
+						die = 1;
+						return;
+					}
+					else
+					{
+						gotoxy(j, i);
+						printf("  ");
+						x[i][j] = 0;
+						i--;
+						gotoxy(j, i);
+						printf("X");
+						x[i][j] = 4;
+					}
+				}
+					  i++;
+					  break;
+				case 3: if (x[i + 1][j] == 1 || x[i + 1][j] == 2 || x[i + 1][j] == 3 || x[i + 1][j] == 4)
+				{
+					goto A;
+				}
+					  else
+				{
+					if (x[i + 1][j] == 5)
+					{
+						die = 1;
+						return;
+					}
+					else
+					{
+						gotoxy(j, i);
+						printf("  ");
+						x[i][j] = 0;
+						i++;
+						gotoxy(j, i);
+						printf("X");
+						x[i][j] = 4;
+					}
+				}
+					  i--;
+					  break;
+				}
+			}
+		A:;
+		}
+	}
+}
